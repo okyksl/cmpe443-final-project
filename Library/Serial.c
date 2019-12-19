@@ -8,12 +8,17 @@ uint8_t serialTransmitCompleted = 0;
 
 void Serial_Init() {
 	//Change the function of TX and RX pins for UART.
+	BYTE_WRITE(&Serial_UART_TX_PIN, 0x7, 0x1);
+	BYTE_WRITE(&Serial_UART_RX_PIN, 0x7, 0x1);
 	
 	//Turn on UART0.
+	BYTE_WRITE(&PCONP, 0x8, 0x8); 
 	
 	//Enable FIFO for UART0.
+	BYTE_WRITE(&(SERIAL_UART->FCR), 0x1, 0x1);
 	
 	//In order to change the DLM, DLL and FDR values, Write correct code for enabling the access to Divisor Latches.
+
 	
 	//Write correct DLM, DLL and FDR values for 115200 baudrate
 	

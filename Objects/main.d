@@ -11,4 +11,3 @@
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\main.o: Library/Serial.h
 .\objects\main.o: Library/SystemStructures.h
-.\objects\main.o: Library/HM10.h

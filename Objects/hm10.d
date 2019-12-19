@@ -10,5 +10,3 @@
 .\objects\hm10.o: C:\Users\Anıl\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include\system_LPC407x_8x_177x_8x.h
 .\objects\hm10.o: Library\Serial.h
 .\objects\hm10.o: Library\SystemStructures.h
-.\objects\hm10.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\hm10.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

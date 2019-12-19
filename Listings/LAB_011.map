@@ -54,7 +54,7 @@ Removing Unused input sections from the image.
     Removing serial.o(.rev16_text), (4 bytes).
     Removing serial.o(.revsh_text), (4 bytes).
     Removing serial.o(.rrx_text), (6 bytes).
-    Removing serial.o(i.Serial_Init), (2 bytes).
+    Removing serial.o(i.Serial_Init), (20 bytes).
     Removing hm10.o(.rev16_text), (4 bytes).
     Removing hm10.o(.revsh_text), (4 bytes).
     Removing hm10.o(.rrx_text), (6 bytes).
@@ -63,12 +63,16 @@ Removing Unused input sections from the image.
     Removing hm10.o(i.HM10_SendCommand), (12 bytes).
     Removing hm10.o(i.HM10_Write), (22 bytes).
     Removing hm10.o(i.HM10_WriteData), (24 bytes).
+    Removing utility.o(.rev16_text), (4 bytes).
+    Removing utility.o(.revsh_text), (4 bytes).
+    Removing utility.o(.rrx_text), (6 bytes).
+    Removing utility.o(i.BYTE_WRITE), (18 bytes).
     Removing startup_lpc407x_8x_177x_8x.o(HEAP), (0 bytes).
     Removing system_lpc407x_8x_177x_8x.o(.rev16_text), (4 bytes).
     Removing system_lpc407x_8x_177x_8x.o(.revsh_text), (4 bytes).
     Removing system_lpc407x_8x_177x_8x.o(.rrx_text), (6 bytes).
 
-20 unused section(s) (total 356 bytes) removed from the image.
+24 unused section(s) (total 406 bytes) removed from the image.
 
 ==============================================================================
 
@@ -79,17 +83,17 @@ Image Symbol Table
     Symbol Name                              Value     Ov Type        Size  Object(Section)
 
     RESET                                    0x00000000   Section      228  startup_lpc407x_8x_177x_8x.o(RESET)
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
     Library\HM10.c                           0x00000000   Number         0  hm10.o ABSOLUTE
@@ -99,6 +103,8 @@ Image Symbol Table
     RTE\Device\LPC4088FET208\startup_LPC407x_8x_177x_8x.s 0x00000000   Number         0  startup_lpc407x_8x_177x_8x.o ABSOLUTE
     RTE\Device\LPC4088FET208\system_LPC407x_8x_177x_8x.c 0x00000000   Number         0  system_lpc407x_8x_177x_8x.o ABSOLUTE
     RTE\\Device\\LPC4088FET208\\system_LPC407x_8x_177x_8x.c 0x00000000   Number         0  system_lpc407x_8x_177x_8x.o ABSOLUTE
+    Utility.c                                0x00000000   Number         0  utility.o ABSOLUTE
+    Utility.c                                0x00000000   Number         0  utility.o ABSOLUTE
     dc.s                                     0x00000000   Number         0  dc.o ABSOLUTE
     handlers.s                               0x00000000   Number         0  handlers.o ABSOLUTE
     init.s                                   0x00000000   Number         0  init.o ABSOLUTE
@@ -119,19 +125,19 @@ Image Symbol Table
     .text                                    0x0000011c   Section       36  init.o(.text)
     i.HM10_ReadData                          0x00000140   Section        0  hm10.o(i.HM10_ReadData)
     i.Serial_ReadData                        0x00000158   Section        0  serial.o(i.Serial_ReadData)
-    i.Serial_WriteData                       0x00000160   Section        0  serial.o(i.Serial_WriteData)
-    i.SystemInit                             0x00000170   Section        0  system_lpc407x_8x_177x_8x.o(i.SystemInit)
-    i.UART0_IRQHandler                       0x0000025c   Section        0  serial.o(i.UART0_IRQHandler)
-    i.UART3_IRQHandler                       0x000002ac   Section        0  hm10.o(i.UART3_IRQHandler)
-    i.__scatterload_copy                     0x000002dc   Section       14  handlers.o(i.__scatterload_copy)
-    i.__scatterload_null                     0x000002ea   Section        2  handlers.o(i.__scatterload_null)
-    i.__scatterload_zeroinit                 0x000002ec   Section       14  handlers.o(i.__scatterload_zeroinit)
-    i.init                                   0x000002fa   Section        0  main.o(i.init)
+    i.Serial_WriteData                       0x00000164   Section        0  serial.o(i.Serial_WriteData)
+    i.SystemInit                             0x00000178   Section        0  system_lpc407x_8x_177x_8x.o(i.SystemInit)
+    i.UART0_IRQHandler                       0x00000264   Section        0  serial.o(i.UART0_IRQHandler)
+    i.UART3_IRQHandler                       0x000002b4   Section        0  hm10.o(i.UART3_IRQHandler)
+    i.__scatterload_copy                     0x000002e4   Section       14  handlers.o(i.__scatterload_copy)
+    i.__scatterload_null                     0x000002f2   Section        2  handlers.o(i.__scatterload_null)
+    i.init                                   0x000002f4   Section        0  main.o(i.init)
+    i.update                                 0x000002f6   Section        0  main.o(i.update)
     .ARM.__at_0x02FC                         0x000002fc   Section        4  startup_lpc407x_8x_177x_8x.o(.ARM.__at_0x02FC)
     i.SystemCoreClockUpdate                  0x00000300   Section        0  system_lpc407x_8x_177x_8x.o(i.SystemCoreClockUpdate)
-    i.fpu_init                               0x000005d4   Section        0  system_lpc407x_8x_177x_8x.o(i.fpu_init)
-    i.main                                   0x00000624   Section        0  main.o(i.main)
-    i.update                                 0x00000630   Section        0  main.o(i.update)
+    i.__scatterload_zeroinit                 0x000005d4   Section       14  handlers.o(i.__scatterload_zeroinit)
+    i.fpu_init                               0x000005e4   Section        0  system_lpc407x_8x_177x_8x.o(i.fpu_init)
+    i.main                                   0x00000634   Section        0  main.o(i.main)
     .data                                    0x10000000   Section        9  serial.o(.data)
     .data                                    0x10000009   Section        2  hm10.o(.data)
     .data                                    0x1000000c   Section       16  system_lpc407x_8x_177x_8x.o(.data)
@@ -211,20 +217,20 @@ Image Symbol Table
     __scatterload_rt2                        0x0000011d   Thumb Code     0  init.o(.text)
     HM10_ReadData                            0x00000141   Thumb Code    20  hm10.o(i.HM10_ReadData)
     Serial_ReadData                          0x00000159   Thumb Code     6  serial.o(i.Serial_ReadData)
-    Serial_WriteData                         0x00000161   Thumb Code    10  serial.o(i.Serial_WriteData)
-    SystemInit                               0x00000171   Thumb Code   220  system_lpc407x_8x_177x_8x.o(i.SystemInit)
-    UART0_IRQHandler                         0x0000025d   Thumb Code    64  serial.o(i.UART0_IRQHandler)
-    UART3_IRQHandler                         0x000002ad   Thumb Code    34  hm10.o(i.UART3_IRQHandler)
-    __scatterload_copy                       0x000002dd   Thumb Code    14  handlers.o(i.__scatterload_copy)
-    __scatterload_null                       0x000002eb   Thumb Code     2  handlers.o(i.__scatterload_null)
-    __scatterload_zeroinit                   0x000002ed   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
-    init                                     0x000002fb   Thumb Code     2  main.o(i.init)
+    Serial_WriteData                         0x00000165   Thumb Code    12  serial.o(i.Serial_WriteData)
+    SystemInit                               0x00000179   Thumb Code   220  system_lpc407x_8x_177x_8x.o(i.SystemInit)
+    UART0_IRQHandler                         0x00000265   Thumb Code    64  serial.o(i.UART0_IRQHandler)
+    UART3_IRQHandler                         0x000002b5   Thumb Code    34  hm10.o(i.UART3_IRQHandler)
+    __scatterload_copy                       0x000002e5   Thumb Code    14  handlers.o(i.__scatterload_copy)
+    __scatterload_null                       0x000002f3   Thumb Code     2  handlers.o(i.__scatterload_null)
+    init                                     0x000002f5   Thumb Code     2  main.o(i.init)
+    update                                   0x000002f7   Thumb Code     2  main.o(i.update)
     SystemCoreClockUpdate                    0x00000301   Thumb Code   696  system_lpc407x_8x_177x_8x.o(i.SystemCoreClockUpdate)
-    fpu_init                                 0x000005d5   Thumb Code    62  system_lpc407x_8x_177x_8x.o(i.fpu_init)
-    main                                     0x00000625   Thumb Code    12  main.o(i.main)
-    update                                   0x00000631   Thumb Code     2  main.o(i.update)
-    Region$$Table$$Base                      0x00000634   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00000654   Number         0  anon$$obj.o(Region$$Table)
+    __scatterload_zeroinit                   0x000005d5   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
+    fpu_init                                 0x000005e5   Thumb Code    62  system_lpc407x_8x_177x_8x.o(i.fpu_init)
+    main                                     0x00000635   Thumb Code    12  main.o(i.main)
+    Region$$Table$$Base                      0x00000640   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00000660   Number         0  anon$$obj.o(Region$$Table)
     serialReceivedCharacter                  0x10000000   Data           1  serial.o(.data)
     serialNewDataAvailable                   0x10000001   Data           1  serial.o(.data)
     serialTransmitData                       0x10000004   Data           4  serial.o(.data)
@@ -246,61 +252,61 @@ Memory Map of the image
 
   Image Entry point : 0x000000f9
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x00000670, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x00000000, Size: 0x0000067c, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000654, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000660, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x00000000   0x00000000   0x000000e4   Data   RO          211    RESET               startup_lpc407x_8x_177x_8x.o
-    0x000000e4   0x000000e4   0x00000000   Code   RO          261  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
-    0x000000e4   0x000000e4   0x00000004   Code   RO          264    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
-    0x000000e8   0x000000e8   0x00000004   Code   RO          267    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
-    0x000000ec   0x000000ec   0x00000000   Code   RO          269    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
-    0x000000ec   0x000000ec   0x00000000   Code   RO          271    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
-    0x000000ec   0x000000ec   0x00000008   Code   RO          272    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
-    0x000000f4   0x000000f4   0x00000000   Code   RO          274    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
-    0x000000f4   0x000000f4   0x00000000   Code   RO          276    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
-    0x000000f4   0x000000f4   0x00000004   Code   RO          265    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
-    0x000000f8   0x000000f8   0x00000024   Code   RO          213  * .text               startup_lpc407x_8x_177x_8x.o
-    0x0000011c   0x0000011c   0x00000024   Code   RO          278    .text               mc_w.l(init.o)
+    0x00000000   0x00000000   0x000000e4   Data   RO          235    RESET               startup_lpc407x_8x_177x_8x.o
+    0x000000e4   0x000000e4   0x00000000   Code   RO          285  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x000000e4   0x000000e4   0x00000004   Code   RO          288    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x000000e8   0x000000e8   0x00000004   Code   RO          291    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x000000ec   0x000000ec   0x00000000   Code   RO          293    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x000000ec   0x000000ec   0x00000000   Code   RO          295    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
+    0x000000ec   0x000000ec   0x00000008   Code   RO          296    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
+    0x000000f4   0x000000f4   0x00000000   Code   RO          298    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
+    0x000000f4   0x000000f4   0x00000000   Code   RO          300    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
+    0x000000f4   0x000000f4   0x00000004   Code   RO          289    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x000000f8   0x000000f8   0x00000024   Code   RO          237  * .text               startup_lpc407x_8x_177x_8x.o
+    0x0000011c   0x0000011c   0x00000024   Code   RO          302    .text               mc_w.l(init.o)
     0x00000140   0x00000140   0x00000018   Code   RO          143    i.HM10_ReadData     hm10.o
-    0x00000158   0x00000158   0x00000006   Code   RO           91    i.Serial_ReadData   serial.o
-    0x0000015e   0x0000015e   0x00000002   PAD
-    0x00000160   0x00000160   0x00000010   Code   RO           92    i.Serial_WriteData  serial.o
-    0x00000170   0x00000170   0x000000ec   Code   RO          223    i.SystemInit        system_lpc407x_8x_177x_8x.o
-    0x0000025c   0x0000025c   0x00000050   Code   RO           93    i.UART0_IRQHandler  serial.o
-    0x000002ac   0x000002ac   0x00000030   Code   RO          147    i.UART3_IRQHandler  hm10.o
-    0x000002dc   0x000002dc   0x0000000e   Code   RO          282    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x000002ea   0x000002ea   0x00000002   Code   RO          283    i.__scatterload_null  mc_w.l(handlers.o)
-    0x000002ec   0x000002ec   0x0000000e   Code   RO          284    i.__scatterload_zeroinit  mc_w.l(handlers.o)
-    0x000002fa   0x000002fa   0x00000002   Code   RO            4    i.init              main.o
-    0x000002fc   0x000002fc   0x00000004   Code   RO          212    .ARM.__at_0x02FC    startup_lpc407x_8x_177x_8x.o
-    0x00000300   0x00000300   0x000002d4   Code   RO          222    i.SystemCoreClockUpdate  system_lpc407x_8x_177x_8x.o
-    0x000005d4   0x000005d4   0x00000050   Code   RO          224    i.fpu_init          system_lpc407x_8x_177x_8x.o
-    0x00000624   0x00000624   0x0000000c   Code   RO            5    i.main              main.o
-    0x00000630   0x00000630   0x00000002   Code   RO            6    i.update            main.o
-    0x00000632   0x00000632   0x00000002   PAD
-    0x00000634   0x00000634   0x00000020   Data   RO          280    Region$$Table       anon$$obj.o
+    0x00000158   0x00000158   0x0000000c   Code   RO           91    i.Serial_ReadData   serial.o
+    0x00000164   0x00000164   0x00000014   Code   RO           92    i.Serial_WriteData  serial.o
+    0x00000178   0x00000178   0x000000ec   Code   RO          247    i.SystemInit        system_lpc407x_8x_177x_8x.o
+    0x00000264   0x00000264   0x00000050   Code   RO           93    i.UART0_IRQHandler  serial.o
+    0x000002b4   0x000002b4   0x00000030   Code   RO          147    i.UART3_IRQHandler  hm10.o
+    0x000002e4   0x000002e4   0x0000000e   Code   RO          306    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x000002f2   0x000002f2   0x00000002   Code   RO          307    i.__scatterload_null  mc_w.l(handlers.o)
+    0x000002f4   0x000002f4   0x00000002   Code   RO            4    i.init              main.o
+    0x000002f6   0x000002f6   0x00000002   Code   RO            6    i.update            main.o
+    0x000002f8   0x000002f8   0x00000004   PAD
+    0x000002fc   0x000002fc   0x00000004   Code   RO          236    .ARM.__at_0x02FC    startup_lpc407x_8x_177x_8x.o
+    0x00000300   0x00000300   0x000002d4   Code   RO          246    i.SystemCoreClockUpdate  system_lpc407x_8x_177x_8x.o
+    0x000005d4   0x000005d4   0x0000000e   Code   RO          308    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x000005e2   0x000005e2   0x00000002   PAD
+    0x000005e4   0x000005e4   0x00000050   Code   RO          248    i.fpu_init          system_lpc407x_8x_177x_8x.o
+    0x00000634   0x00000634   0x0000000c   Code   RO            5    i.main              main.o
+    0x00000640   0x00000640   0x00000020   Data   RO          304    Region$$Table       anon$$obj.o
 
 
-    Execution Region ER_RW (Exec base: 0x10000000, Load base: 0x00000654, Size: 0x0000001c, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RW (Exec base: 0x10000000, Load base: 0x00000660, Size: 0x0000001c, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x10000000   0x00000654   0x00000009   Data   RW           94    .data               serial.o
-    0x10000009   0x0000065d   0x00000002   Data   RW          149    .data               hm10.o
-    0x1000000b   0x0000065f   0x00000001   PAD
-    0x1000000c   0x00000660   0x00000010   Data   RW          225    .data               system_lpc407x_8x_177x_8x.o
+    0x10000000   0x00000660   0x00000009   Data   RW           94    .data               serial.o
+    0x10000009   0x00000669   0x00000002   Data   RW          149    .data               hm10.o
+    0x1000000b   0x0000066b   0x00000001   PAD
+    0x1000000c   0x0000066c   0x00000010   Data   RW          249    .data               system_lpc407x_8x_177x_8x.o
 
 
-    Execution Region ER_ZI (Exec base: 0x1000001c, Load base: 0x00000670, Size: 0x00000504, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_ZI (Exec base: 0x1000001c, Load base: 0x0000067c, Size: 0x00000504, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x1000001c        -       0x00000100   Zero   RW          148    .bss                hm10.o
-    0x1000011c   0x00000670   0x00000004   PAD
-    0x10000120        -       0x00000400   Zero   RW          209    STACK               startup_lpc407x_8x_177x_8x.o
+    0x1000011c   0x0000067c   0x00000004   PAD
+    0x10000120        -       0x00000400   Zero   RW          233    STACK               startup_lpc407x_8x_177x_8x.o
 
 
 ==============================================================================
@@ -312,12 +318,12 @@ Image component sizes
 
         72         18          0          2        256       1528   hm10.o
         16          0          0          0          0       5763   main.o
-       102         22          0          9          0       1904   serial.o
+       112         30          0          9          0       1908   serial.o
         40         12        228          0       1024       1080   startup_lpc407x_8x_177x_8x.o
       1040         62          0         16          0       4576   system_lpc407x_8x_177x_8x.o
 
     ----------------------------------------------------------------------
-      1274        114        260         28       1284      14851   Object Totals
+      1284        122        260         28       1284      14855   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          4          0          0          1          4          0   (incl. Padding)
 
@@ -337,8 +343,8 @@ Image component sizes
         36          8          0          0          0         68   init.o
 
     ----------------------------------------------------------------------
-        86         16          0          0          0         68   Library Totals
-         0          0          0          0          0          0   (incl. Padding)
+        88         16          0          0          0         68   Library Totals
+         2          0          0          0          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -347,7 +353,7 @@ Image component sizes
         86         16          0          0          0         68   mc_w.l
 
     ----------------------------------------------------------------------
-        86         16          0          0          0         68   Library Totals
+        88         16          0          0          0         68   Library Totals
 
     ----------------------------------------------------------------------
 
@@ -356,15 +362,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      1360        130        260         28       1284      14423   Grand Totals
-      1360        130        260         28       1284      14423   ELF Image Totals
-      1360        130        260         28          0          0   ROM Totals
+      1372        138        260         28       1284      14427   Grand Totals
+      1372        138        260         28       1284      14427   ELF Image Totals
+      1372        138        260         28          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 1620 (   1.58kB)
+    Total RO  Size (Code + RO Data)                 1632 (   1.59kB)
     Total RW  Size (RW Data + ZI Data)              1312 (   1.28kB)
-    Total ROM Size (Code + RO Data + RW Data)       1648 (   1.61kB)
+    Total ROM Size (Code + RO Data + RW Data)       1660 (   1.62kB)
 
 ==============================================================================
 
