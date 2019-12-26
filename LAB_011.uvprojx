@@ -407,6 +407,31 @@
               <FileType>1</FileType>
               <FilePath>.\Library\HM10.c</FilePath>
             </File>
+            <File>
+              <FileName>GPIO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Library\GPIO.c</FilePath>
+            </File>
+            <File>
+              <FileName>Ultrasonic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Library\Ultrasonic.c</FilePath>
+            </File>
+            <File>
+              <FileName>Wait.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Library\Wait.c</FilePath>
+            </File>
+            <File>
+              <FileName>ADC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Library\ADC.c</FilePath>
+            </File>
+            <File>
+              <FileName>Timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Library\Timer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

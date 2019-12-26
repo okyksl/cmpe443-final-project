@@ -49,15 +49,15 @@ typedef struct
 }UART_TypeDef;
 
 //Write the base address of the UART0.
-#define Serial_UART_BASE	0x00000000
+#define Serial_UART_BASE	0x4000C000
 #define Serial_UART	((UART_TypeDef*) Serial_UART_BASE)
 
 //Write the IOCON address of TX Pin
-#define Serial_UART_TX_PIN_ADDRESS	0x00000000
+#define Serial_UART_TX_PIN_ADDRESS	0x4002C008
 #define Serial_UART_TX_PIN	*((volatile uint32_t*)(Serial_UART_TX_PIN_ADDRESS))
 
 //Write the IOCON address of PX Pin
-#define Serial_UART_RX_PIN_ADDRESS	0x00000000
+#define Serial_UART_RX_PIN_ADDRESS	0x4002C00C
 #define Serial_UART_RX_PIN	*((volatile uint32_t*)(Serial_UART_RX_PIN_ADDRESS))
 
 extern char serialReceivedCharacter;
