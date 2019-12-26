@@ -5,8 +5,8 @@
 
 #include "Library/Serial.h"
 #include "Library/Ultrasonic.h"
-//#include "Library/ADC.h"
-//#include "Library/Timer.h"
+#include "Library/ADC.h"
+#include "Library/Timer.h"
 
 void ultrasonic_init(){
 	Ultrasonic_Init();
@@ -45,9 +45,9 @@ void itoa(uint32_t number) {
 void init() {	
 	Serial_Init();
 	ultrasonic_init();
-	//Timer_Init();
-	//ADC_Init();
-	//ADC_Start();
+	Timer_Init();
+	ADC_Init();
+	ADC_Start();
 }
 
 uint32_t time;
@@ -57,6 +57,10 @@ void ultrasonic_update(){
 		ultrasonicSensorNewDataAvailable = 0;
 		time = ultrasonicSensorFallingCaptureTime - ultrasonicSensorRisingCaptureTime;
 		time /= 58;
+		itoa(time);
+		serialTransmitData= c; 
+		Serial_WriteData(*serialTransmitData++);
+while(!serialTransmitCompleted);
 	}
 }
 

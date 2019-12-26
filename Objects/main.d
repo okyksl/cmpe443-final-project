@@ -14,3 +14,4 @@
 .\objects\main.o: Library/Ultrasonic.h
 .\objects\main.o: Library/GPIO.h
 .\objects\main.o: Library/Timer.h
+.\objects\main.o: Library/ADC.h
