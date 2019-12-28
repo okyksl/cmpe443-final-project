@@ -60,12 +60,24 @@ void ultrasonic_update(){
 		itoa(time);
 		serialTransmitData= c; 
 		Serial_WriteData(*serialTransmitData++);
-while(!serialTransmitCompleted);
+		while(!serialTransmitCompleted);
+	}
+}
+
+uint32_t adc_value;
+void ADC_update(){
+	if(ADC_New_Data_Available){
+		adc_value = ADC_GetLastValue();
+		itoa(adc_value);
+		serialTransmitData= c; 
+		Serial_WriteData(*serialTransmitData++);
+		while(!serialTransmitCompleted);
 	}
 }
 
 void update() {
 	ultrasonic_update();
+	ADC_update();
 }
 
 int main() {
