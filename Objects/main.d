@@ -15,3 +15,4 @@
 .\objects\main.o: Library/GPIO.h
 .\objects\main.o: Library/Timer.h
 .\objects\main.o: Library/ADC.h
+.\objects\main.o: Library/PWM.h

@@ -7,13 +7,7 @@
 #include "Library/Ultrasonic.h"
 #include "Library/ADC.h"
 #include "Library/Timer.h"
-
-void ultrasonic_init(){
-	Ultrasonic_Init();
-	Ultrasonic_Trigger_Timer_Init();
-	Ultrasonic_Capture_Timer_Init();
-	Ultrasonic_Start_Trigger_Timer();
-}
+#include "Library/PWM.h"
 
 char c[14];
 void itoa(uint32_t number) {
@@ -42,16 +36,25 @@ void itoa(uint32_t number) {
 	c[++index] = '\n';
 }
 
+void ultrasonic_init(){
+	Ultrasonic_Init();
+	Ultrasonic_Trigger_Timer_Init();
+	Ultrasonic_Capture_Timer_Init();
+	Ultrasonic_Start_Trigger_Timer();
+}
+
 void init() {	
 	Serial_Init();
 	ultrasonic_init();
 	Timer_Init();
 	ADC_Init();
 	ADC_Start();
+	PWM0_Init();
+	PWM0_Cycle_Rate(20);
+	PWM0_Write(0);
 }
 
 uint32_t time;
-
 void ultrasonic_update(){
 	if(ultrasonicSensorNewDataAvailable){
 		ultrasonicSensorNewDataAvailable = 0;
@@ -78,6 +81,7 @@ void ADC_update(){
 void update() {
 	ultrasonic_update();
 	ADC_update();
+	//PWM0_Write(50);
 }
 
 int main() {
