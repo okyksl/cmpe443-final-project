@@ -46,12 +46,13 @@ void ultrasonic_init(){
 void init() {	
 	Serial_Init();
 	ultrasonic_init();
-	Timer_Init();
+	Timer0_Init();
 	ADC_Init();
 	ADC_Start();
 	PWM0_Init();
 	PWM0_Cycle_Rate(20);
 	PWM0_Write(0);
+	PWM0_Set_ClockWise();
 }
 
 uint32_t time;
@@ -60,17 +61,24 @@ void ultrasonic_update(){
 		ultrasonicSensorNewDataAvailable = 0;
 		time = ultrasonicSensorFallingCaptureTime - ultrasonicSensorRisingCaptureTime;
 		time /= 58;
-		itoa(time);
-		serialTransmitData= c; 
-		Serial_WriteData(*serialTransmitData++);
-		while(!serialTransmitCompleted);
+		//itoa(time);
+		//serialTransmitData= c; 
+		//Serial_WriteData(*serialTransmitData++);
+		//while(!serialTransmitCompleted);
 	}
 }
 
 uint32_t adc_value;
 void ADC_update(){
-	if(ADC_New_Data_Available){
-		adc_value = ADC_GetLastValue();
+	if(ADC_New_Data_Available_L){
+		adc_value = ADC_GetLastValue_L();
+		//itoa(adc_value);
+		//serialTransmitData= c; 
+		//Serial_WriteData(*serialTransmitData++);
+		//while(!serialTransmitCompleted);
+	}
+	if(ADC_New_Data_Available_R){
+		adc_value = ADC_GetLastValue_R();
 		itoa(adc_value);
 		serialTransmitData= c; 
 		Serial_WriteData(*serialTransmitData++);
@@ -81,7 +89,7 @@ void ADC_update(){
 void update() {
 	ultrasonic_update();
 	ADC_update();
-	//PWM0_Write(50);
+	//PWM0_Write(90);
 }
 
 int main() {
