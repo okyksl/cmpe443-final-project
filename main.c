@@ -7,7 +7,7 @@
 #include "Library/Ultrasonic.h"
 #include "Library/ADC.h"
 #include "Library/Timer.h"
-#include "Library/PWM.h"
+#include "Library/Motor.h"
 
 char c[14];
 void itoa(uint32_t number) {
@@ -43,16 +43,12 @@ void ultrasonic_init(){
 	Ultrasonic_Start_Trigger_Timer();
 }
 
-void init() {	
+void init() {
 	Serial_Init();
 	ultrasonic_init();
 	Timer0_Init();
 	ADC_Init();
 	ADC_Start();
-	PWM0_Init();
-	PWM0_Cycle_Rate(20);
-	PWM0_Write(0);
-	PWM0_Set_ClockWise();
 }
 
 uint32_t time;
@@ -89,10 +85,12 @@ void ADC_update(){
 void update() {
 	ultrasonic_update();
 	ADC_update();
-	//PWM0_Write(90);
+	//Motor_Set_Speed(90);
 }
 
 int main() {
+	Motor_Init();
+
 	init();
 	while(1) {
 		update();
