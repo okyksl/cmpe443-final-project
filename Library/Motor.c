@@ -4,7 +4,8 @@
 
 void Motor_Init() {
 	// enable output for motor control GPIOs
-	GPIO_DIR_Write(GPIO_MOTOR_PORT, (1 << GPIO_MOTOR_PIN_A | 1 << GPIO_MOTOR_PIN_B), 1);
+	GPIO_DIR_Write(GPIO_MOTOR_R_PORT_A, (1 << GPIO_MOTOR_R_PIN_A | 1 << GPIO_MOTOR_R_PIN_B), 1);
+  GPIO_DIR_Write(GPIO_MOTOR_L_PORT_B, (1 << GPIO_MOTOR_L_PIN_A | 1 << GPIO_MOTOR_L_PIN_B), 1);
 
 	// configure IOCONs for PWM output
 	IOCON_MOTOR_R |= (IOCON_MOTOR_R_FUNC << 0);
@@ -32,7 +33,7 @@ void Motor_Init() {
 	PWM_MOTOR->TCR = (1 << 0 | 1 << 3);
 
 	// initialize speed
-	Motor_Set_Speed(0);
+	Motor_Set_Speed(0,0);
 }
 
 void Motor_Set_Rate(uint32_t PERIOD_IN_MS) {
@@ -71,19 +72,19 @@ void Motor_Run(uint32_t R_CW, uint32_t L_CW) {
 
 void Motor_Drive(uint32_t T_ON) {
 	Motor_Run(MOTOR_DRIVE_CW, MOTOR_DRIVE_CW);
-	Motor_Set_Speed(MOTOR_DRIVE_SPEED);
+	Motor_Set_Speed(MOTOR_DRIVE_SPEED, MOTOR_DRIVE_SPEED);
 	Led_Front();
 }
 
-void Motor_Drive(uint32_t T_ON) {
+void Motor_Drive_Back(uint32_t T_ON) {
 	Motor_Run(MOTOR_DRIVE_BACK_CW, MOTOR_DRIVE_BACK_CW);
-	Motor_Set_Speed(MOTOR_DRIVE_BACK_SPEED);
+	Motor_Set_Speed(MOTOR_DRIVE_BACK_SPEED, MOTOR_DRIVE_BACK_SPEED);
 	Led_Back();
 }
 
 void Motor_Rotate(uint32_t IS_CW) {
 	Motor_Run(IS_CW, !IS_CW);
-	Motor_Set_Speed(MOTOR_ROTATE_SPEED);
+	Motor_Set_Speed(MOTOR_ROTATE_SPEED, MOTOR_ROTATE_SPEED);
 	Led_Rotate(IS_CW);
 }
 

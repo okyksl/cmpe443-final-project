@@ -11,28 +11,28 @@
 #define PWM_LED_FR_CHANNEL 1
 #define IOCON_LED_FR_FUNC 0x3
 #define IOCON_LED_FR_ADDRESS 0x4002C088
-#define IOCON_LED_FR *((volatile uint32_t*)(IOCON_LED_FR))
+#define IOCON_LED_FR *((volatile uint32_t*)(IOCON_LED_FR_ADDRESS))
 
 // P1.3 (P29) - front left LED
 #define PWM_LED_FL_MR MR2
 #define PWM_LED_FL_CHANNEL 2
 #define IOCON_LED_FL_FUNC 0x3
 #define IOCON_LED_FL_ADDRESS 0x4002C08C
-#define IOCON_LED_FL *((volatile uint32_t*)(IOCON_LED_FL))
+#define IOCON_LED_FL *((volatile uint32_t*)(IOCON_LED_FL_ADDRESS))
 
 // P1.5 (P28) - back right LED
-#define PWM_LED_RL_MR MR3
-#define PWM_LED_RL_CHANNEL 3
-#define IOCON_LED_RL_FUNC 0x3
-#define IOCON_LED_RL_ADDRESS 0x4002C094
-#define IOCON_LED_RL *((volatile uint32_t*)(IOCON_LED_RL))
+#define PWM_LED_BR_MR MR3
+#define PWM_LED_BR_CHANNEL 3
+#define IOCON_LED_BR_FUNC 0x3
+#define IOCON_LED_BR_ADDRESS 0x4002C094
+#define IOCON_LED_BR *((volatile uint32_t*)(IOCON_LED_BR_ADDRESS))
 
 // P1.6 (P27) - back left LED
 #define PWM_LED_BL_MR MR4
 #define PWM_LED_BL_CHANNEL 4
 #define IOCON_LED_BL_FUNC 0x3
 #define IOCON_LED_BL_ADDRESS 0x4002C098
-#define IOCON_LED_BL *((volatile uint32_t*)(IOCON_LED_BL))
+#define IOCON_LED_BL *((volatile uint32_t*)(IOCON_LED_BL_ADDRESS))
 
 void Led_Init();
 void Led_Front();

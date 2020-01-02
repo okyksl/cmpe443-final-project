@@ -433,9 +433,14 @@
               <FilePath>.\Library\Timer.c</FilePath>
             </File>
             <File>
-              <FileName>PWM.c</FileName>
+              <FileName>Motor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Library\PWM.c</FilePath>
+              <FilePath>.\Library\Motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>LED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Library\LED.c</FilePath>
             </File>
           </Files>
         </Group>

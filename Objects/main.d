@@ -15,4 +15,6 @@
 .\objects\main.o: Library/GPIO.h
 .\objects\main.o: Library/Timer.h
 .\objects\main.o: Library/ADC.h
+.\objects\main.o: Library/Motor.h
 .\objects\main.o: Library/PWM.h
+.\objects\main.o: Library/Led.h
