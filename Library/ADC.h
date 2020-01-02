@@ -23,6 +23,9 @@ typedef struct {
 	
 #define	ANALOG_PIN_IOCON_ADDRESS_R	0x4002C068
 #define ANALOG_PIN_IOCON_R	*((volatile uint32_t*)(ANALOG_PIN_IOCON_ADDRESS_R))
+	
+#define	ANALOG_PIN_IOCON_ADDRESS_P	0x4002C0F8
+#define ANALOG_PIN_IOCON_P	*((volatile uint32_t*)(ANALOG_PIN_IOCON_ADDRESS_P))
 
 //Write the max value of ADC.
 #define ADC_MAX_VALUE 0x11111111
@@ -37,11 +40,14 @@ extern uint32_t ADC_Last_L;
 extern uint8_t ADC_New_Data_Available_L;
 extern uint32_t ADC_Last_R;
 extern uint8_t ADC_New_Data_Available_R;
+extern uint32_t ADC_Last_P;
+extern uint8_t ADC_New_Data_Available_P;
 
 void ADC_Init(void);
 void ADC_Start(void);
 void ADC_Stop(void);
 uint32_t ADC_GetLastValue_L(void);
 uint32_t ADC_GetLastValue_R(void);
+uint32_t ADC_GetLastValue_P(void);
 
 #endif

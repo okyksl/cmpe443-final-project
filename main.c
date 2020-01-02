@@ -76,6 +76,13 @@ void ADC_update(){
 	}
 	if(ADC_New_Data_Available_R){
 		adc_value = ADC_GetLastValue_R();
+		//itoa(adc_value);
+		//serialTransmitData= c; 
+		//Serial_WriteData(*serialTransmitData++);
+		//while(!serialTransmitCompleted);
+	}
+	if(ADC_New_Data_Available_P){
+		adc_value = ADC_GetLastValue_P();
 		itoa(adc_value);
 		serialTransmitData= c; 
 		Serial_WriteData(*serialTransmitData++);
