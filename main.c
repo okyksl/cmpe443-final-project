@@ -8,6 +8,7 @@
 #include "Library/ADC.h"
 #include "Library/Timer.h"
 #include "Library/Motor.h"
+#include "Library/Led.h"
 
 char c[14];
 void itoa(uint32_t number) {
@@ -90,6 +91,7 @@ void update() {
 
 int main() {
 	Motor_Init();
+	Led_Init();
 
 	init();
 	while(1) {
