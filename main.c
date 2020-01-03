@@ -18,7 +18,6 @@
 #define P_METER_MAX_VALUE 4096
 #define HALF_ROTATE_COUNT 6
 #define MOTOR_DRIVE_SPEED 90
-#define MOTOR_ROTATE_SPEED 65
 
 uint8_t isTest = 1;
 uint8_t isLight = 0;
@@ -31,133 +30,16 @@ uint32_t rotation_counter = 0;
 
 // --- GLOBALS ---
 
-
-// --- HELPERS ---
-
-// converts a number into string
-char c[14]
-void itoa(uint32_t number) {
-	uint32_t index = 0;
-	uint32_t reverser = 0;
-	char temp;
-	for(index = 0 ; index < 14; index++){
-		c[index] = 0;
-	}
-	index = 0;
-	if(number == 0){
-		return;
-	}
-	while (number > 0) {
-		c[index++] = '0' + (number % 10);
-		number /= 10;
-	}
-	index--;
-	while( reverser < index-reverser ){
-		temp = c[reverser];
-		c[reverser] = c[index-reverser];
-		c[index-reverser] = temp;
-		reverser++;
-	}
-	c[++index] = '\r';
-	c[++index] = '\n';
-}
-
-// --- HELPERS ---
-
-// --- LOW LEVEL UPDATES ---
-
-void Ultrasonic_Update() {
-	// read ultrasonic value
-	if (ultrasonicSensorNewDataAvailable) {
-		ultrasonicSensorNewDataAvailable = 0;
-		ultrasonic_dist = (ultrasonicSensorFallingCaptureTime - ultrasonicSensorRisingCaptureTime) / 58;
-	}
-}
-
-void ADC_Update() {
-	// read adc values
-	if (ADC_New_Data_Available_L) {
-		left_ldr = ADC_GetLastValue_L();
-	}
-	if (ADC_New_Data_Available_R) {
-		right_ldr = ADC_GetLastValue_R();
-	}
-	if (ADC_New_Data_Available_P) {
-		p_meter = ADC_GetLastValue_P();
-		motor_speed = 100 * p_meter / P_METER_MAX_VALUE
-		Motor_Set_Speed(motor_speed, motor_speed);
-	}
-
-	// react to lighting condition
-	control_light();
-}
-
-char incoming_message[20], status_info[500];
-void Serial_Update() {
-	uint32_t i = 0;
-	if (HM10NewDataAvailable) {
-		// read incoming message
-		HM10NewDataAvailable = 0;
-		while (HM10BufferHead != HM10BufferTail) {
-			incoming_message[i++] = HM10Buffer[HM10BufferHead++];
-			if (HM10Buffer[HM10BufferHead-1] == '\n') {
-				incoming_message[i] = '\0';
-				break;
-			}
-		}
-		if (HM10BufferTail+20 > HM10BufferSize) {
-			HM10_ClearBuffer();
-		}
-
-		// response to commands
-		if (strstr(incoming_message, "STATUS")) {
-			HM10_SendCommand(incoming_message);
-			sprintf(status_info, "{\"distance\":%d,\"light_level_left\":%d,\"light_level_right\":%d,\"op_mode\":%s}\r\n", ultrasonic_dist, left_ldr, right_ldr, isTest ? "\"TEST\"" : "\"AUTO\"");
-			HM10_SendCommand(status_info);
-		} else if (isTest) {
-			HM10_SendCommand(incoming_message);
-
-			if (strstr(incoming_message, "STOP")) {
-				stop();
-			}	else if (strstr(incoming_message, "FORWARD")) {
-				drive(0, speed * MOTOR_DRIVE_SPEED)
-			} else if (strstr(incoming_message, "RIGHT")) {
-				rotate(0, speed * MOTOR_ROTATE_SPEED);
-			} else if (strstr(incoming_message, "LEFT")) {
-				rotate(1, speed * MOTOR_ROTATE_SPEED);
-			} else if (strstr(incoming_message, "BACK")) {
-				drive(1, speed * MOTOR_DRIVE_SPEED)
-			} else if (strstr(incoming_message, "AUTO")) {
-				stop();
-				isTest = 0;
-				HM10_SendCommand("AUTONOMOUS\r\n");
-			}
-		} else {
-			if (strstr(incoming_message, "TEST")) {
-				HM10_SendCommand(incoming_message);
-				isTest = 1;
-				HM10_SendCommand("TESTING\r\n");
-			} else if(strstr(incoming_message, "START")) {
-				drive(90*p_meter/P_METER_MAX_VALUE);
-				HM10_SendCommand(incoming_message);
-			}
-		}
-	}
-}
-
-// --- LOW LEVEL UPDATES ---
-
-
 // --- HIGH LEVEL CONTROL ---
 
 // controls light condition and starts & stops car accordingly
 void control_light() {
-	if (left_ldr > LDR_LIGHT_LIMIT || right_ldr > LDR_LIGHT_LIMIT) {
+	if (left_ldr > LDR_LIGHT_LIMIT || right_ldr > LDR_LIGHT_LIMIT) { //wtf
 		isLight = 1;
-		PCONP &= ~((1 << PWM0_PCONP) | (1 << PWM1_PCONP))
+		PCONP &= ~((1 << PWM0_PCONP) | (1 << PWM1_PCONP));
 	} else if (isLight && left_ldr < LDR_LIGHT_LIMIT && right_ldr < LDR_LIGHT_LIMIT) {
 		isLight = 0;
-		PCONP |= (1 << PWM0_PCONP) | (1 << PWM1_PCONP)
+		PCONP |= (1 << PWM0_PCONP) | (1 << PWM1_PCONP);
 	}
 }
 
@@ -194,6 +76,95 @@ void stop() {
 }
 
 // --- HIGH LEVEL CONTROL ---
+
+// --- LOW LEVEL UPDATES ---
+
+void Ultrasonic_Update() {
+	// read ultrasonic value
+	if (ultrasonicSensorNewDataAvailable) {
+		ultrasonicSensorNewDataAvailable = 0;
+		ultrasonic_dist = ((ultrasonicSensorFallingCaptureTime - ultrasonicSensorRisingCaptureTime) % 60000) / 58;
+	}
+}
+
+void ADC_Update() {
+	// read adc values
+	if (ADC_New_Data_Available_L) {
+		left_ldr = ADC_GetLastValue_L();
+	}
+	if (ADC_New_Data_Available_R) {
+		right_ldr = ADC_GetLastValue_R();
+	}
+	if (ADC_New_Data_Available_P) {
+		p_meter = ADC_GetLastValue_P();
+		motor_speed = MOTOR_DRIVE_SPEED * p_meter / P_METER_MAX_VALUE;
+		Motor_Set_Speed(motor_speed, motor_speed);
+	}
+
+	// react to lighting condition
+	control_light();
+}
+
+char incoming_message[20], status_info[500];
+void Serial_Update() {
+	uint32_t i = 0;
+	if (HM10NewDataAvailable) {
+		// read incoming message
+		HM10NewDataAvailable = 0;
+		while (HM10BufferHead != HM10BufferTail) {
+			incoming_message[i++] = HM10Buffer[HM10BufferHead++];
+			if (HM10Buffer[HM10BufferHead-1] == '\n') {
+				incoming_message[i] = '\0';
+				break;
+			}
+		}
+		if (HM10BufferTail+20 > HM10BufferSize) {
+			HM10_ClearBuffer();
+		}
+
+		// response to commands
+		if (strstr(incoming_message, "STATUS")) {
+			HM10_SendCommand(incoming_message);
+			sprintf(status_info, "{\"distance\":%d,\"light_level_left\":%d,\"light_level_right\":%d,\"op_mode\":%s}\r\n", ultrasonic_dist, left_ldr, right_ldr, isTest ? "\"TEST\"" : "\"AUTO\"");
+			HM10_SendCommand(status_info);
+		} else if (isTest) {
+			if (strstr(incoming_message, "STOP")) {
+				HM10_SendCommand(incoming_message);
+				stop();
+			}	else if (strstr(incoming_message, "FORWARD")) {
+				HM10_SendCommand(incoming_message);
+				drive(0, motor_speed);
+			} else if (strstr(incoming_message, "RIGHT")) {
+				HM10_SendCommand(incoming_message);
+				rotate(0, motor_speed);
+			} else if (strstr(incoming_message, "LEFT")) {
+				HM10_SendCommand(incoming_message);
+				rotate(1, motor_speed);
+			} else if (strstr(incoming_message, "BACK")) {
+				HM10_SendCommand(incoming_message);
+				drive(1, motor_speed);
+			} else if (strstr(incoming_message, "AUTO")) {
+				HM10_SendCommand(incoming_message);
+				stop();
+				isTest = 0;
+				HM10_SendCommand("AUTONOMOUS\r\n");
+			}
+		} else {
+			if (strstr(incoming_message, "TEST")) {
+				HM10_SendCommand(incoming_message);
+				stop();
+				isTest = 1;
+				HM10_SendCommand("TESTING\r\n");
+			} else if(strstr(incoming_message, "START")) {
+				drive(0, motor_speed);
+				HM10_SendCommand(incoming_message);
+			}
+		}
+	}
+}
+
+// --- LOW LEVEL UPDATES ---
+
 
 // --- LIFE CYCLE --
 

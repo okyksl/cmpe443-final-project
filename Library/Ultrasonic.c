@@ -10,13 +10,7 @@ uint8_t ultrasonicSensorNewDataAvailable = 0;
 uint8_t ultrasonicSensorTriggerStart = 0;
 uint8_t ultrasonicSensorCaptureRisingEdge = 0;
 
-void Ultrasonic_Init() {
-	IOCON_TRIGGER |= 0x03;
-	IOCON_ECHO |= 0x03;
 
-	Ultrasonic_Trigger_Timer_Init();
-	Ultrasonic_Capture_Timer_Init();
-}
 
 void Ultrasonic_Trigger_Timer_Init() {
 	// Turn on Timer2.
@@ -64,6 +58,14 @@ void Ultrasonic_Capture_Timer_Init() {
 	TIMER3->TCR |= (1 << 0);
 
 	NVIC_EnableIRQ(TIMER3_IRQn);
+}
+
+void Ultrasonic_Init() {
+	IOCON_TRIGGER |= 0x03;
+	IOCON_ECHO |= 0x03;
+
+	Ultrasonic_Trigger_Timer_Init();
+	Ultrasonic_Capture_Timer_Init();
 }
 
 void Ultrasonic_Start() {

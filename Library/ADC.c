@@ -8,6 +8,36 @@ uint8_t ADC_New_Data_Available_R = 0;
 uint32_t ADC_Last_P = 0;
 uint8_t ADC_New_Data_Available_P = 0;
 
+
+void ADC_Timer_Init() {
+	TIMER_PIN_IOCON &= ~(0x07);
+	TIMER_PIN_IOCON |= 0x03;
+
+	PCONP |= 1 << 1;
+
+	TIMER0->CTCR = 0x0;
+
+	TIMER0->TCR &= ~(1 << 0);
+
+	TIMER0->TCR |= (1 << 1);
+
+	TIMER0->PR = (PERIPHERAL_CLOCK_FREQUENCY / 1000000) - 1;
+
+	//Toggle the corresponding External Match bit/output when MR1 matches with TC.
+	TIMER0->EMR |= (0x3<<6);
+
+	//Reset the TC value whenever MR1 matches it
+	TIMER0->MCR |= (1<<4);
+
+	//Configure MR1 as ADC will start every 100 milliseconds (Do not forget you configured ADC when rising edge occurs on TIMER 0 MATCH 1)
+	TIMER0->MR1 = 100000;
+
+	TIMER0->TCR &= ~(1 << 1);
+
+	TIMER0->TCR |= (1 << 0);
+}
+
+
 void ADC_Init() {
 	//Change the function value of pin to ADC.
 	ANALOG_PIN_IOCON_L |= (1<<0);
@@ -66,34 +96,6 @@ void ADC_Init() {
 
 	//Enable ADC_IRQn (Interrupt Request).
 	NVIC_EnableIRQ(ADC_IRQn);
-}
-
-void ADC_Timer_Init() {
-	TIMER_PIN_IOCON &= ~(0x07);
-	TIMER_PIN_IOCON |= 0x03;
-
-	PCONP |= 1 << 1;
-
-	TIMER0->CTCR = 0x0;
-
-	TIMER0->TCR &= ~(1 << 0);
-
-	TIMER0->TCR |= (1 << 1);
-
-	TIMER0->PR = (PERIPHERAL_CLOCK_FREQUENCY / 1000000) - 1;
-
-	//Toggle the corresponding External Match bit/output when MR1 matches with TC.
-	TIMER0->EMR |= (0x3<<6);
-
-	//Reset the TC value whenever MR1 matches it
-	TIMER0->MCR |= (1<<4);
-
-	//Configure MR1 as ADC will start every 100 milliseconds (Do not forget you configured ADC when rising edge occurs on TIMER 0 MATCH 1)
-	TIMER0->MR1 = 100000;
-
-	TIMER0->TCR &= ~(1 << 1);
-
-	TIMER0->TCR |= (1 << 0);
 }
 
 void ADC_Start() {
