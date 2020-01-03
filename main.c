@@ -14,16 +14,17 @@
 
 #define LDR_LIGHT_LIMIT 1700
 #define P_METER_MAX_VALUE 4096
+#define HALF_ROTATE_COUNT 6
+#define MOTOR_DRIVE_SPEED 90
+#define MOTOR_ROTATE_SPEED 65
 
-uint8_t RIGHT_MOTOR_SPEED, RIGHT_MOTOR_DIR, LEFT_MOTOR_SPEED, LEFT_MOTOR_DIR;
 uint8_t isTest = 1;
-uint8_t isStop = 0;
 uint8_t isLight = 0;
-
 uint32_t ultrasonic_dist = 0;
 uint32_t left_ldr = 0;
 uint32_t right_ldr = 0;
 uint32_t p_meter = 0;
+uint32_t motor_speed = 0;
 uint32_t rotation_counter = 0;
 
 // converts a number into string
@@ -55,48 +56,31 @@ void itoa(uint32_t number) {
 }
 
 void Ultrasonic_Update() {
+	// read ultrasonic value
 	if (ultrasonicSensorNewDataAvailable) {
 		ultrasonicSensorNewDataAvailable = 0;
 		ultrasonic_dist = (ultrasonicSensorFallingCaptureTime - ultrasonicSensorRisingCaptureTime) / 58;
 	}
 }
 
-void ADC_Update(){
+void ADC_Update() {
+	// read adc values
 	if (ADC_New_Data_Available_L) {
 		left_ldr = ADC_GetLastValue_L();
 	}
 	if (ADC_New_Data_Available_R) {
 		right_ldr = ADC_GetLastValue_R();
 	}
-	if (left_ldr > LDR_LIGHT_LIMIT || right_ldr > LDR_LIGHT_LIMIT) {
-		isLight = 1;
-		Motor_Stop();
-	} else if (isLight && left_ldr < LDR_LIGHT_LIMIT && right_ldr < LDR_LIGHT_LIMIT) {
-		isLight = 0;
-		Motor_Set_Speed(LEFT_MOTOR_SPEED*p_meter/P_METER_MAX_VALUE, RIGHT_MOTOR_SPEED*p_meter/P_METER_MAX_VALUE);
-		if(!isStop) {
-			Motor_Run(!LEFT_MOTOR_DIR, !RIGHT_MOTOR_DIR);
-			if(LEFT_MOTOR_DIR && RIGHT_MOTOR_DIR){
-				Led_Front();
-			}
-			else if(LEFT_MOTOR_DIR && !RIGHT_MOTOR_DIR){
-				Led_Rotate(1); //TODO
-			}
-			else if(!LEFT_MOTOR_DIR && RIGHT_MOTOR_DIR){
-				Led_Rotate(0);
-			}
-			else if(!LEFT_MOTOR_DIR && !RIGHT_MOTOR_DIR){
-				Led_Back();
-			}
-		}
-	}
 	if (ADC_New_Data_Available_P) {
 		p_meter = ADC_GetLastValue_P();
-		Motor_Set_Speed(LEFT_MOTOR_SPEED*p_meter/P_METER_MAX_VALUE, RIGHT_MOTOR_SPEED*p_meter/P_METER_MAX_VALUE);
+		motor_speed = 100 * p_meter / P_METER_MAX_VALUE
+		Motor_Set_Speed(motor_speed, motor_speed);
 	}
+
+	// react to lighting condition
+	control_light();
 }
 
-// TODO: Rewrite
 char incoming_message[20], status_info[500];
 void Serial_Update() {
 	uint32_t i = 0;
@@ -123,29 +107,17 @@ void Serial_Update() {
 			HM10_SendCommand(incoming_message);
 
 			if (strstr(incoming_message, "STOP")) {
-				isStop = 1;
-				Motor_Stop();
+				stop();
 			}	else if (strstr(incoming_message, "FORWARD")) {
-				RIGHT_MOTOR_DIR = 1;
-				LEFT_MOTOR_DIR = 1;
-				RIGHT_MOTOR_SPEED = 90;
-				LEFT_MOTOR_SPEED = 90;
-				isStop = 0;
-				Motor_Drive(90*p_meter/P_METER_MAX_VALUE);
+				drive(0, speed * MOTOR_DRIVE_SPEED)
 			} else if (strstr(incoming_message, "RIGHT")) {
-				rotate(0);
+				rotate(0, speed * MOTOR_ROTATE_SPEED);
 			} else if (strstr(incoming_message, "LEFT")) {
-				rotate(1);
+				rotate(1, speed * MOTOR_ROTATE_SPEED);
 			} else if (strstr(incoming_message, "BACK")) {
-				RIGHT_MOTOR_DIR = 0;
-				LEFT_MOTOR_DIR = 0;
-				RIGHT_MOTOR_SPEED = 90;
-				LEFT_MOTOR_SPEED = 90;
-				isStop = 0;
-				Motor_Drive_Back(90*p_meter/P_METER_MAX_VALUE);
+				drive(1, speed * MOTOR_DRIVE_SPEED)
 			} else if (strstr(incoming_message, "AUTO")) {
-				Motor_Stop();
-				isStop = 1;
+				stop();
 				isTest = 0;
 				HM10_SendCommand("AUTONOMOUS\r\n");
 			}
@@ -155,25 +127,54 @@ void Serial_Update() {
 				isTest = 1;
 				HM10_SendCommand("TESTING\r\n");
 			} else if(strstr(incoming_message, "START")) {
-				isStop = 0;
+				drive(90*p_meter/P_METER_MAX_VALUE);
 				HM10_SendCommand(incoming_message);
 			}
 		}
 	}
 }
 
+// controls light condition and starts & stops car accordingly
+void control_light() {
+	if (left_ldr > LDR_LIGHT_LIMIT || right_ldr > LDR_LIGHT_LIMIT) {
+		isLight = 1;
+		PCONP &= ~((1 << PWM0_PCONP) | (1 << PWM1_PCONP))
+	} else if (isLight && left_ldr < LDR_LIGHT_LIMIT && right_ldr < LDR_LIGHT_LIMIT) {
+		isLight = 0;
+		PCONP |= (1 << PWM0_PCONP) | (1 << PWM1_PCONP)
+	}
+}
+
+// drives car in given direction
+void drive(uint32_t dir, uint32_t speed) {
+	if (dir == 0) {
+		Motor_Drive(speed);
+	} else {
+		Motor_Drive_Back(speed);
+	}
+}
+
 // rotates car by 90 degrees in desired direction
-void rotate(uint32_t IS_CW) {
+void rotate(uint32_t dir, uint32_t speed) {
 	// start counting wheel rotation
 	rotation_counter = 0;
   NVIC_EnableIRQ(EINT0_IRQn);
 
-	Motor_Rotate(IS_CW);
-	while (rotation_counter < MOTOR_ROTATE_COUNT);
+  if (dir == 0) {
+  	Motor_Rotate_Right(speed);
+  } else {
+  	Motor_Rotate_Left(speed);
+  }
+	while (rotation_counter < HALF_ROTATE_COUNT);
 	Motor_Stop();
 
 	// stop counting wheel rotation
   NVIC_DisableIRQ(EINT0_IRQn);
+}
+
+// stops car
+void stop() {
+	Motor_Stop();
 }
 
 void init() {

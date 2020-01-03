@@ -33,13 +33,8 @@
 #define GPIO_MOTOR_R_PORT_B PORT0
 #define GPIO_MOTOR_R_PIN_B 21
 
-// TODO: Experiment with these values
-// Motor variables
 #define MOTOR_DRIVE_CW 0
-#define MOTOR_DRIVE_SPEED 100
 #define MOTOR_DRIVE_BACK_CW 1
-#define MOTOR_ROTATE_SPEED 70
-#define MOTOR_ROTATE_COUNT 6
 
 void Motor_Init();
 void Motor_Set_Rate(uint32_t PERIOD_IN_MS);
@@ -47,7 +42,8 @@ void Motor_Set_Speed(uint32_t L_ON, uint32_t R_ON);
 void Motor_Run(uint32_t L_CW, uint32_t R_CW);
 void Motor_Drive(uint32_t T_ON);
 void Motor_Drive_Back(uint32_t T_ON);
-void Motor_Rotate(uint32_t IS_CW);
+void Motor_Rotate_Left(uint32_t T_ON);
+void Motor_Rotate_Right(uint32_t T_ON);
 void Motor_Stop();
 
 // TODO: Need to handle "turning" as well

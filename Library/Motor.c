@@ -84,10 +84,16 @@ void Motor_Drive_Back(uint32_t T_ON) {
 	Led_Back();
 }
 
-void Motor_Rotate(uint32_t IS_CW) {
-	Motor_Run(IS_CW, !IS_CW);
-	Motor_Set_Speed(MOTOR_ROTATE_SPEED, MOTOR_ROTATE_SPEED);
-	Led_Rotate(IS_CW);
+void Motor_Rotate_Left(uint32_t T_ON) {
+	Motor_Run(0, 1);
+	Motor_Set_Speed(T_ON, T_ON);
+	Led_Left();
+}
+
+void Motor_Rotate_Right(uint32_t T_ON) {
+	Motor_Run(1, 0);
+	Motor_Set_Speed(T_ON, T_ON);
+	Led_Right();
 }
 
 void Motor_Stop() {
