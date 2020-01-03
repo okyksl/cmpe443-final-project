@@ -33,6 +33,7 @@ void HM10_Init() {
 
 	//Enable the Receive Data Available Interrupt.
 	HM10_UART->IER |= (1<<0);
+
 	//Enable UART3_IRQn Interrupt.
 	NVIC_EnableIRQ(UART3_IRQn);
 }

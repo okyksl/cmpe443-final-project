@@ -12,6 +12,8 @@
 #include "Library/External.h"
 #include "Library/HM10.h"
 
+// --- GLOBALS ---
+
 #define LDR_LIGHT_LIMIT 1700
 #define P_METER_MAX_VALUE 4096
 #define HALF_ROTATE_COUNT 6
@@ -26,6 +28,11 @@ uint32_t right_ldr = 0;
 uint32_t p_meter = 0;
 uint32_t motor_speed = 0;
 uint32_t rotation_counter = 0;
+
+// --- GLOBALS ---
+
+
+// --- HELPERS ---
 
 // converts a number into string
 char c[14]
@@ -54,6 +61,10 @@ void itoa(uint32_t number) {
 	c[++index] = '\r';
 	c[++index] = '\n';
 }
+
+// --- HELPERS ---
+
+// --- LOW LEVEL UPDATES ---
 
 void Ultrasonic_Update() {
 	// read ultrasonic value
@@ -134,6 +145,11 @@ void Serial_Update() {
 	}
 }
 
+// --- LOW LEVEL UPDATES ---
+
+
+// --- HIGH LEVEL CONTROL ---
+
 // controls light condition and starts & stops car accordingly
 void control_light() {
 	if (left_ldr > LDR_LIGHT_LIMIT || right_ldr > LDR_LIGHT_LIMIT) {
@@ -177,11 +193,19 @@ void stop() {
 	Motor_Stop();
 }
 
+// --- HIGH LEVEL CONTROL ---
+
+// --- LIFE CYCLE --
+
 void init() {
+	// initialize UART
 	Serial_Init();
+
+	// initialize HM10
 	HM10_Init();
+
+	// initialize ADC
 	ADC_Init();
-	ADC_Start();
 
 	// initialize Ultrasonic Sensor (& timers utiized)
 	Ultrasonic_Init();
@@ -214,6 +238,9 @@ int main() {
 	// start Ultrasonic
 	Ultrasonic_Start();
 
+	// start ADC
+	ADC_Start();
+
 	// stop Motor
 	Motor_Stop();
 
@@ -222,3 +249,4 @@ int main() {
 	}
 }
 
+// --- LIFE CYCLE --
