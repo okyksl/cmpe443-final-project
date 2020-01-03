@@ -15,10 +15,12 @@ typedef struct
 #define IOCON_SPEED_SENSOR_ADDRESS 0x4002C128
 #define IOCON_SPEED_SENSOR_FUNC 0x01
 #define IOCON_SPEED_SENSOR *((volatile uint32_t*)(IOCON_SPEED_SENSOR_ADDRESS))
-#define SPEED_SENSOR_PRIORITY 99
 
 #define EXT_ADDRESS 0x400FC140
 #define EXT ((EXT_TypeDef*) EXT_ADDRESS)
+
+#define SPEED_SENSOR_CHANNEL 0
+#define SPEED_SENSOR_PRIORITY 99
 
 extern uint32_t rotation_counter;
 void External_Init(void);

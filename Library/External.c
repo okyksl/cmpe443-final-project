@@ -3,9 +3,9 @@
 uint32_t rotation_counter = 0;
 
 void External_Init() {
-  IOCON_SPEED_SENSOR |= (1 << IOCON_SPEED_SENSOR_FUNC) // configure IOCON func
-  EINT->EXTMODE |= (1 << 0) // edge-sensitive
-  EINT->EXTPOLAR |= (1 << 0) // rising-edge
+  IOCON_SPEED_SENSOR |= (IOCON_SPEED_SENSOR_FUNC << 0); // configure IOCON func
+  EXT->EXTMODE |= (1 << SPEED_SENSOR_CHANNEL); // edge-sensitive
+  EXT->EXTPOLAR |= (1 << SPEED_SENSOR_CHANNEL); // rising-edge
 
   // enable interrupt for EINT0_IRQn
   NVIC_EnableIRQ(EINT0_IRQn);
@@ -14,6 +14,6 @@ void External_Init() {
 }
 
 void EINT0_IRQHandler() {
-  EINT->EXTINT |= (1 << 0) // clear interrupt for EINT0
+  EXT->EXTINT |= (1 << SPEED_SENSOR_CHANNEL); // clear interrupt for EINT0
   rotation_counter += 1;
 }
