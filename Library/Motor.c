@@ -4,8 +4,10 @@
 
 void Motor_Init() {
 	// enable output for motor control GPIOs
-	GPIO_DIR_Write(GPIO_MOTOR_R_PORT_A, (1 << GPIO_MOTOR_R_PIN_A | 1 << GPIO_MOTOR_R_PIN_B), 1);
-  GPIO_DIR_Write(GPIO_MOTOR_L_PORT_B, (1 << GPIO_MOTOR_L_PIN_A | 1 << GPIO_MOTOR_L_PIN_B), 1);
+	GPIO_DIR_Write(GPIO_MOTOR_R_PORT_A, 1 << GPIO_MOTOR_R_PIN_A, 1);
+  GPIO_DIR_Write(GPIO_MOTOR_R_PORT_B, 1 << GPIO_MOTOR_R_PIN_B, 1);
+	GPIO_DIR_Write(GPIO_MOTOR_L_PORT_A, 1 << GPIO_MOTOR_L_PIN_A, 1);
+  GPIO_DIR_Write(GPIO_MOTOR_L_PORT_B, 1 << GPIO_MOTOR_L_PIN_B, 1);
 
 	// configure IOCONs for PWM output
 	IOCON_MOTOR_R |= (IOCON_MOTOR_R_FUNC << 0);

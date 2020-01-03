@@ -442,6 +442,11 @@
               <FileType>1</FileType>
               <FilePath>.\Library\LED.c</FilePath>
             </File>
+            <File>
+              <FileName>External.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Library\External.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

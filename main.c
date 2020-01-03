@@ -12,12 +12,15 @@
 #include "Library/External.h"
 #include "Library/HM10.h"
 
+#define LIGHT_LIMIT 1700
+
 uint8_t RIGHT_MOTOR_SPEED, RIGHT_MOTOR_DIR, LEFT_MOTOR_SPEED, LEFT_MOTOR_DIR;
 
 char c[14],incoming_message[20], status_info[500];
 uint8_t isTestMode = 1;
 uint8_t isLight = 0;
 uint8_t isStop = 0;
+uint32_t rotation_counter = 0;
 void itoa(uint32_t number) {
 	uint32_t index = 0;
 	uint32_t reverser = 0;
@@ -61,6 +64,11 @@ void init() {
 	Motor_Init();
 	Led_Init();
 	Motor_Stop();
+	External_Init();
+	//Motor_Drive(80);
+	//Led_Front();
+	//Led_Back();
+	//Led_Rotate(0);
 }
 
 uint32_t dist;
@@ -68,7 +76,7 @@ void ultrasonic_update(){
 	if(ultrasonicSensorNewDataAvailable){
 		ultrasonicSensorNewDataAvailable = 0;
 		dist = ultrasonicSensorFallingCaptureTime - ultrasonicSensorRisingCaptureTime;
-		dist %= 60000;
+		
 		dist /= 58;
 	}
 }
@@ -82,11 +90,11 @@ void ADC_update(){
 	if(ADC_New_Data_Available_R){
 		right_ldr = ADC_GetLastValue_R();
 	}
-	if( left_ldr < 1500 || right_ldr < 1500){
+	if( left_ldr > LIGHT_LIMIT || right_ldr > LIGHT_LIMIT){
 		isLight = 1;
 		Motor_Stop();
 	}
-	else if(isLight && left_ldr > 1500 && right_ldr > 1500){
+	else if(isLight && left_ldr < LIGHT_LIMIT && right_ldr < LIGHT_LIMIT){
 		isLight = 0;
 		Motor_Set_Speed(LEFT_MOTOR_SPEED*p_meter/4096, RIGHT_MOTOR_SPEED*p_meter/4096);
 		if(!isStop) {
@@ -146,14 +154,14 @@ void Communication_Update(){
 		else if(isTestMode && strstr(incoming_message, "RIGHT")){
 			HM10_SendCommand(incoming_message);
 			rotation_counter = 0;
-			Motor_Rotate(1);
+			Motor_Rotate(0);
 			while (rotation_counter < MOTOR_ROTATE_COUNT);
 			Motor_Stop();
 		}
 		else if(isTestMode && strstr(incoming_message, "LEFT")){
 			HM10_SendCommand(incoming_message);
 			rotation_counter = 0;
-			Motor_Rotate(0);
+			Motor_Rotate(1);
 			while (rotation_counter < MOTOR_ROTATE_COUNT);
 			Motor_Stop();
 		}
