@@ -56,19 +56,4 @@ typedef enum {
 void GPIO_DIR_Write(GPIO_TypeDef* PORT,uint32_t MASK,uint8_t value);
 void GPIO_PIN_Write(GPIO_TypeDef* PORT,uint32_t MASK,uint8_t value);
 
-void LED1_Init(void);
-void LED2_Init(void);
-void LED3_Init(void);
-void LED4_Init(void);
-
-void LED1_Off(void);
-void LED2_Off(void);
-void LED3_Off(void);
-void LED4_Off(void);
-
-void LED1_On(void);
-void LED2_On(void);
-void LED3_On(void);
-void LED4_On(void);
-
 #endif
