@@ -20,10 +20,10 @@ typedef struct {
 //Write the IOCON address of Analog Pin
 #define	ANALOG_PIN_IOCON_ADDRESS_L	0x4002C064
 #define ANALOG_PIN_IOCON_L	*((volatile uint32_t*)(ANALOG_PIN_IOCON_ADDRESS_L))
-	
+
 #define	ANALOG_PIN_IOCON_ADDRESS_R	0x4002C068
 #define ANALOG_PIN_IOCON_R	*((volatile uint32_t*)(ANALOG_PIN_IOCON_ADDRESS_R))
-	
+
 #define	ANALOG_PIN_IOCON_ADDRESS_P	0x4002C0F8
 #define ANALOG_PIN_IOCON_P	*((volatile uint32_t*)(ANALOG_PIN_IOCON_ADDRESS_P))
 

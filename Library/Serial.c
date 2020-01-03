@@ -5,14 +5,13 @@ uint8_t serialNewDataAvailable = 0;
 char* serialTransmitData = 0;
 uint8_t serialTransmitCompleted = 0;
 
-
 void Serial_Init() {
 	//Change the function of TX and RX pins for UART.
 	uint32_t value = Serial_UART_RX_PIN;
 	value |= 1<<0;
 	value &= ~(1<<1 | 1<< 2);
 	Serial_UART_RX_PIN = value;
-	
+
 	value = Serial_UART_TX_PIN;
 	value |= 1<<0;
 	value &= ~(1<<1 | 1<< 2);
@@ -43,9 +42,9 @@ void Serial_Init() {
 	NVIC_SetPriority(UART0_IRQn, 5);
 }
 
-void UART0_IRQHandler() {	
+void UART0_IRQHandler() {
 	uint32_t currentInterrupt = (Serial_UART->IIR & (0x7 << 1)) >> 1;
-	
+
 	//First if statement is for Receive Data Available interrupt.
 	//When Receive Data Available, the code will enter to the first if condition.
 	if(currentInterrupt == 0x2) {

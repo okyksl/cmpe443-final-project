@@ -22,9 +22,6 @@ extern uint8_t ultrasonicSensorTriggerStart;
 extern uint8_t ultrasonicSensorCaptureRisingEdge;
 
 void Ultrasonic_Init(void);
-void Ultrasonic_Trigger_Timer_Init(void);
-void Ultrasonic_Capture_Timer_Init(void);
-
-void Ultrasonic_Start_Trigger_Timer(void);
+void Ultrasonic_Start(void);
 
 #endif

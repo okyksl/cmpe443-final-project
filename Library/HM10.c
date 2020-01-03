@@ -6,31 +6,31 @@ uint8_t HM10NewDataAvailable = 0;
 
 char HM10Buffer[HM10BufferSize];
 
-void HM10_Init() {	
+void HM10_Init() {
 	HM10_UART_TX_PIN |= 0x02;
 	HM10_UART_RX_PIN |= 0x02;
-	
-	PCONP |= 1 <<  25;
-	
+
+	PCONP |= 1 << 25;
+
 	HM10_UART->FCR =	1 << 0
 						 |	0 << 1
 						 |	0 << 2
 						 |	0 << 6;
-	
+
 	HM10_UART->LCR |= (1 << 7);
-	
+
 	//Write correct DLM, DLL and FDR values for 9600 baudrate
 	HM10_UART->DLM = 0x01;
 	HM10_UART->DLL = 0x25;
 	HM10_UART->FDR = 0x01 << 0 | 0x03 << 4;
 
 	HM10_UART->LCR &= ~(1 << 7);
-	
+
 	HM10_UART->LCR =	3 << 0
 							| 0 << 2
 							| 0 << 3
 							| 0 << 4;
-	
+
 	//Enable the Receive Data Available Interrupt.
 	HM10_UART->IER |= (1<<0);
 	//Enable UART3_IRQn Interrupt.
@@ -44,7 +44,7 @@ void HM10_SendCommand(char* command) {
 void HM10_ClearBuffer() {
 	HM10BufferHead = 0;
 	HM10BufferTail = 0;
-	strcpy(HM10Buffer,"");	
+	strcpy(HM10Buffer,"");
 }
 
 char HM10_ReadData() {

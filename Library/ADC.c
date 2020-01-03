@@ -70,30 +70,29 @@ uint32_t ADC_GetLastValue_P() {
 	return ADC_Last_P;
 }
 
-
 void ADC_IRQHandler() {
 	if((ADC->GDR & (0x3<<24)) == (0x3<<24)){
 		ADC->GDR &= ~((uint32_t)1 << 31);
-	
-	//Write the converted data (only the converted data) to ADC_Last variable.	
+
+		//Write the converted data (only the converted data) to ADC_Last variable.
 		ADC_Last_R = (ADC->DR[3] >> 4) & 0xfff;
-	
-	ADC_New_Data_Available_R = 1;
+
+		ADC_New_Data_Available_R = 1;
 	}
-	else if((ADC->GDR & (0x2<<24)) == (0x2<<24)){
-	ADC->GDR &= ~((uint32_t)1 << 31);
-	
-	//Write the converted data (only the converted data) to ADC_Last variable.	
-	ADC_Last_L = (ADC->DR[2] >> 4) & 0xfff;
-	
-	ADC_New_Data_Available_L = 1;
-	}
-	else{
+	else if ((ADC->GDR & (0x2<<24)) == (0x2<<24)) {
 		ADC->GDR &= ~((uint32_t)1 << 31);
-	
-	//Write the converted data (only the converted data) to ADC_Last variable.	
-	ADC_Last_P = (ADC->DR[4] >> 4) & 0xfff;
-	
-	ADC_New_Data_Available_P = 1;
+
+		//Write the converted data (only the converted data) to ADC_Last variable
+		ADC_Last_L = (ADC->DR[2] >> 4) & 0xfff;
+
+		ADC_New_Data_Available_L = 1;
+	}
+	else {
+		ADC->GDR &= ~((uint32_t)1 << 31);
+
+		//Write the converted data (only the converted data) to ADC_Last variable.
+		ADC_Last_P = (ADC->DR[4] >> 4) & 0xfff;
+
+		ADC_New_Data_Available_P = 1;
 	}
 }
