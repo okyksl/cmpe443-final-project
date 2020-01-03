@@ -39,6 +39,7 @@
 #define MOTOR_DRIVE_SPEED 100
 #define MOTOR_DRIVE_BACK_CW 1
 #define MOTOR_ROTATE_SPEED 30
+#define MOTOR_ROTATE_COUNT 20
 
 void Motor_Init();
 void Motor_Set_Rate(uint32_t PERIOD_IN_MS);

@@ -1,7 +1,7 @@
 #include "LPC407x_8x_177x_8x.h"
 
-#include <stdio.h> 
-#include <string.h> 
+#include <stdio.h>
+#include <string.h>
 
 #include "Library/Serial.h"
 #include "Library/Ultrasonic.h"
@@ -9,6 +9,7 @@
 #include "Library/Timer.h"
 #include "Library/Motor.h"
 #include "Library/Led.h"
+#include "Library/External.h"
 #include "Library/HM10.h"
 
 uint8_t RIGHT_MOTOR_SPEED, RIGHT_MOTOR_DIR, LEFT_MOTOR_SPEED, LEFT_MOTOR_DIR;
@@ -144,13 +145,17 @@ void Communication_Update(){
 		}
 		else if(isTestMode && strstr(incoming_message, "RIGHT")){
 			HM10_SendCommand(incoming_message);
-			//TODO
-			Led_Rotate(1);
+			rotation_counter = 0;
+			Motor_Rotate(1);
+			while (rotation_counter < MOTOR_ROTATE_COUNT);
+			Motor_Stop();
 		}
 		else if(isTestMode && strstr(incoming_message, "LEFT")){
 			HM10_SendCommand(incoming_message);
-			//TODO
-			Led_Rotate(0);
+			rotation_counter = 0;
+			Motor_Rotate(0);
+			while (rotation_counter < MOTOR_ROTATE_COUNT);
+			Motor_Stop();
 		}
 		else if(isTestMode && strstr(incoming_message, "BACK")){
 			RIGHT_MOTOR_DIR = 0;
