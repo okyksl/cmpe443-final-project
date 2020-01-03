@@ -24,6 +24,7 @@ void Led_Init() {
 
   // set period to 0.5s
   PWM_LED->MR0 = 500;
+	PWM_LED->LER |= (1<<0);
 
   // enable counter and PWM
   PWM_LED->TCR = (1 << 0 | 1 << 3);
@@ -34,6 +35,10 @@ void Led_Front() {
   PWM_LED->PWM_LED_FL_MR = PWM_LED->MR0;
   PWM_LED->PWM_LED_BR_MR = 0;
   PWM_LED->PWM_LED_BL_MR = 0;
+	PWM_LED->LER |= ( 1<< PWM_LED_FR_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_FL_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_BR_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_BL_CHANNEL);
 }
 
 void Led_Back() {
@@ -41,6 +46,10 @@ void Led_Back() {
   PWM_LED->PWM_LED_FL_MR = 0;
   PWM_LED->PWM_LED_BR_MR = PWM_LED->MR0;
   PWM_LED->PWM_LED_BL_MR = PWM_LED->MR0;
+	PWM_LED->LER |= ( 1<< PWM_LED_FR_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_FL_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_BR_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_BL_CHANNEL);
 }
 
 void Led_Rotate(uint32_t IS_CW) {
@@ -48,6 +57,10 @@ void Led_Rotate(uint32_t IS_CW) {
   PWM_LED->PWM_LED_FL_MR = !IS_CW * PWM_LED->MR0 / 2;
   PWM_LED->PWM_LED_BR_MR = IS_CW * PWM_LED->MR0 / 2;
   PWM_LED->PWM_LED_BL_MR = !IS_CW * PWM_LED->MR0 / 2;
+	PWM_LED->LER |= ( 1<< PWM_LED_FR_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_FL_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_BR_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_BL_CHANNEL);
 }
 
 void Led_Stop() {
@@ -55,4 +68,8 @@ void Led_Stop() {
   PWM_LED->PWM_LED_FL_MR = 0;
   PWM_LED->PWM_LED_BR_MR = 0;
   PWM_LED->PWM_LED_BL_MR = 0;
+	PWM_LED->LER |= ( 1<< PWM_LED_FR_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_FL_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_BR_CHANNEL);
+	PWM_LED->LER |= ( 1<< PWM_LED_BL_CHANNEL);
 }

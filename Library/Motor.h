@@ -38,7 +38,6 @@
 #define MOTOR_DRIVE_CW 0
 #define MOTOR_DRIVE_SPEED 100
 #define MOTOR_DRIVE_BACK_CW 1
-#define MOTOR_DRIVE_BACK_SPEED 50
 #define MOTOR_ROTATE_SPEED 30
 
 void Motor_Init();

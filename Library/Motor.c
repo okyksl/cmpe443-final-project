@@ -21,7 +21,7 @@ void Motor_Init() {
 	PWM_MOTOR->TCR = 1 << 1;
 
 	// set PR such that each PWM cycle corresponds to 1ms
-	PWM_MOTOR->PR = PWM_CLOCK_FREQ / 1000;
+	PWM_MOTOR->PR = 9;
 
 	// set reset on MR0 match
 	PWM_MOTOR->MCR = 1 << 1;
@@ -34,10 +34,11 @@ void Motor_Init() {
 
 	// initialize speed
 	Motor_Set_Speed(0,0);
+	
 }
 
 void Motor_Set_Rate(uint32_t PERIOD_IN_MS) {
-	PWM_MOTOR->MR0 = PERIOD_IN_MS; // set desired rate to MR0
+	PWM_MOTOR->MR0 = 6000*PERIOD_IN_MS; // set desired rate to MR0
 	PWM_MOTOR->LER |= 1 << 0; // update MR0
 }
 
@@ -72,13 +73,13 @@ void Motor_Run(uint32_t R_CW, uint32_t L_CW) {
 
 void Motor_Drive(uint32_t T_ON) {
 	Motor_Run(MOTOR_DRIVE_CW, MOTOR_DRIVE_CW);
-	Motor_Set_Speed(MOTOR_DRIVE_SPEED, MOTOR_DRIVE_SPEED);
+	Motor_Set_Speed(T_ON, T_ON);
 	Led_Front();
 }
 
 void Motor_Drive_Back(uint32_t T_ON) {
 	Motor_Run(MOTOR_DRIVE_BACK_CW, MOTOR_DRIVE_BACK_CW);
-	Motor_Set_Speed(MOTOR_DRIVE_BACK_SPEED, MOTOR_DRIVE_BACK_SPEED);
+	Motor_Set_Speed(T_ON, T_ON);
 	Led_Back();
 }
 
@@ -90,11 +91,11 @@ void Motor_Rotate(uint32_t IS_CW) {
 
 void Motor_Stop() {
 	// disable motor
-	GPIO_PIN_Write(GPIO_MOTOR_R_PORT_A, (1 << GPIO_MOTOR_R_PIN_A), 0);
-	GPIO_PIN_Write(GPIO_MOTOR_R_PORT_B, (1 << GPIO_MOTOR_R_PIN_B), 0);
+	GPIO_PIN_Write(GPIO_MOTOR_R_PORT_A, (1 << GPIO_MOTOR_R_PIN_A), 1);
+	GPIO_PIN_Write(GPIO_MOTOR_R_PORT_B, (1 << GPIO_MOTOR_R_PIN_B), 1);
 
-	GPIO_PIN_Write(GPIO_MOTOR_L_PORT_A, (1 << GPIO_MOTOR_L_PIN_A), 0);
-	GPIO_PIN_Write(GPIO_MOTOR_L_PORT_B, (1 << GPIO_MOTOR_L_PIN_B), 0);
+	GPIO_PIN_Write(GPIO_MOTOR_L_PORT_A, (1 << GPIO_MOTOR_L_PIN_A), 1);
+	GPIO_PIN_Write(GPIO_MOTOR_L_PORT_B, (1 << GPIO_MOTOR_L_PIN_B), 1);
 
 	Led_Stop(); // close leds
 }
