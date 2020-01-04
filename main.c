@@ -50,26 +50,11 @@ uint32_t motor_right = 100;
 
 // --- HIGH LEVEL CONTROL ---
 
-// controls light condition and starts & stops car accordingly
-void control_light() {
-	if (left_ldr > LDR_LIGHT_LIMIT || right_ldr > LDR_LIGHT_LIMIT) { //wtf
-		isLight = 1;
 
-		if (!isTest) { // detected finish line
-			sprintf(status_info, "FINISH\r\n");
-			HM10_SendCommand(status_info);
-			stop(); // permanently stop motor
-		} else {
-			Motor_Stop(); // temporarily stop motor
-		}
-	} else if (isLight && left_ldr < LDR_LIGHT_LIMIT && right_ldr < LDR_LIGHT_LIMIT) {
-		isLight = 0;
-
-		// if there was a valid action restore it
-		if (!isStop) {
-			drive(motor_direction, motor_speed);
-		}
-	}
+// stops car until a new command arrives
+void stop() {
+	Motor_Stop();
+	isStop = 1;
 }
 
 // drives car in given direction
@@ -84,6 +69,28 @@ void drive(uint32_t dir, uint32_t speed) {
 	motor_direction = dir;
 	isStop = 0;
 }
+
+// controls light condition and starts & stops car accordingly
+void control_light() {
+	if (left_ldr > LDR_LIGHT_LIMIT || right_ldr > LDR_LIGHT_LIMIT) { //wtf
+		isLight = 1;
+
+		if (!isTest) { // detected finish line
+			HM10_SendCommand("FINISH\r\n");
+			stop(); // permanently stop motor
+		} else {
+			Motor_Stop(); // temporarily stop motor
+		}
+	} else if (isLight && left_ldr < LDR_LIGHT_LIMIT && right_ldr < LDR_LIGHT_LIMIT) {
+		isLight = 0;
+
+		// if there was a valid action restore it
+		if (!isStop) {
+			drive(motor_direction, motor_speed);
+		}
+	}
+}
+
 
 // rotates car by 90 degrees in desired direction
 void rotate(uint32_t dir, uint32_t speed) {
@@ -104,11 +111,7 @@ void rotate(uint32_t dir, uint32_t speed) {
   NVIC_DisableIRQ(EINT0_IRQn);
 }
 
-// stops car until a new command arrives
-void stop() {
-	Motor_Stop();
-	isStop = 1;
-}
+
 
 // autodrives the car
 void autodrive() {
@@ -130,7 +133,7 @@ void autodrive() {
 		motor_left = 100;
 		motor_right = 100 - MOTOR_ANGLE_SPEED * (ultrasonic_dist - ultrasonic_prev);
 	} else if (ultrasonic_dist < ultrasonic_prev) {
-		motor_left = 100 - MOTOR_ANGLE_SPEED * (ultrasonic_prev - ultrasonic_dist)
+		motor_left = 100 - MOTOR_ANGLE_SPEED * (ultrasonic_prev - ultrasonic_dist);
 		motor_right = 100;
 	}
 
