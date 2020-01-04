@@ -16,17 +16,35 @@
 
 #define LDR_LIGHT_LIMIT 1700
 #define P_METER_MAX_VALUE 4096
+
+#define ULTRASONIC_MIN_DIST 18
+#define ULTRASONIC_MEAN_DIST 25
+#define ULTRASONIC_MAX_DIST 32
+
 #define HALF_ROTATE_COUNT 6
+
 #define MOTOR_DRIVE_SPEED 90
+#define MOTOR_UPDATE_SPEED 5
+#define MOTOR_LOW_SPEED 50
+#define MOTOR_ANGLE_SPEED 5
 
 uint8_t isTest = 1;
+uint8_t isStop = 1;
 uint8_t isLight = 0;
-uint32_t ultrasonic_dist = 0;
+
 uint32_t left_ldr = 0;
 uint32_t right_ldr = 0;
 uint32_t p_meter = 0;
-uint32_t motor_speed = 0;
+
+uint32_t ultrasonic_prev = 0;
+uint32_t ultrasonic_dist = 0;
+
 uint32_t rotation_counter = 0;
+
+uint32_t motor_speed = 0;
+uint32_t motor_direction = 0;
+uint32_t motor_left = 100;
+uint32_t motor_right = 100;
 
 // --- GLOBALS ---
 
@@ -36,10 +54,21 @@ uint32_t rotation_counter = 0;
 void control_light() {
 	if (left_ldr > LDR_LIGHT_LIMIT || right_ldr > LDR_LIGHT_LIMIT) { //wtf
 		isLight = 1;
-		PCONP &= ~((1 << PWM0_PCONP) | (1 << PWM1_PCONP));
+
+		if (!isTest) { // detected finish line
+			sprintf(status_info, "FINISH\r\n");
+			HM10_SendCommand(status_info);
+			stop(); // permanently stop motor
+		} else {
+			Motor_Stop(); // temporarily stop motor
+		}
 	} else if (isLight && left_ldr < LDR_LIGHT_LIMIT && right_ldr < LDR_LIGHT_LIMIT) {
 		isLight = 0;
-		PCONP |= (1 << PWM0_PCONP) | (1 << PWM1_PCONP);
+
+		// if there was a valid action restore it
+		if (!isStop) {
+			drive(motor_direction, motor_speed);
+		}
 	}
 }
 
@@ -50,6 +79,10 @@ void drive(uint32_t dir, uint32_t speed) {
 	} else {
 		Motor_Drive_Back(speed);
 	}
+
+	motor_speed = speed;
+	motor_direction = dir;
+	isStop = 0;
 }
 
 // rotates car by 90 degrees in desired direction
@@ -58,21 +91,50 @@ void rotate(uint32_t dir, uint32_t speed) {
 	rotation_counter = 0;
   NVIC_EnableIRQ(EINT0_IRQn);
 
+  stop();
   if (dir == 0) {
   	Motor_Rotate_Right(speed);
   } else {
   	Motor_Rotate_Left(speed);
   }
 	while (rotation_counter < HALF_ROTATE_COUNT);
-	Motor_Stop();
+	stop();
 
 	// stop counting wheel rotation
   NVIC_DisableIRQ(EINT0_IRQn);
 }
 
-// stops car
+// stops car until a new command arrives
 void stop() {
 	Motor_Stop();
+	isStop = 1;
+}
+
+// autodrives the car
+void autodrive() {
+	// slow down if too right or too left
+	if (ultrasonic_dist > ULTRASONIC_MAX_DIST || ultrasonic_dist < ULTRASONIC_MIN_DIST) {
+		motor_speed -= MOTOR_UPDATE_SPEED;
+		if (motor_speed < MOTOR_LOW_SPEED) {
+			motor_speed = MOTOR_LOW_SPEED;
+		}
+	} else {
+		motor_speed += MOTOR_UPDATE_SPEED;
+		if (motor_speed > MOTOR_DRIVE_SPEED) {
+			motor_speed = MOTOR_DRIVE_SPEED;
+		}
+	}
+
+	// adjust motor impulse to match desired rotation
+	if (ultrasonic_dist > ultrasonic_prev) {
+		motor_left = 100;
+		motor_right = 100 - MOTOR_ANGLE_SPEED * (ultrasonic_dist - ultrasonic_prev);
+	} else if (ultrasonic_dist < ultrasonic_prev) {
+		motor_left = 100 - MOTOR_ANGLE_SPEED * (ultrasonic_prev - ultrasonic_dist)
+		motor_right = 100;
+	}
+
+	Motor_Set_Speed(motor_speed * motor_left / 100, motor_speed * motor_right / 100);
 }
 
 // --- HIGH LEVEL CONTROL ---
@@ -83,6 +145,7 @@ void Ultrasonic_Update() {
 	// read ultrasonic value
 	if (ultrasonicSensorNewDataAvailable) {
 		ultrasonicSensorNewDataAvailable = 0;
+		ultrasonic_prev = ultrasonic_dist;
 		ultrasonic_dist = ((ultrasonicSensorFallingCaptureTime - ultrasonicSensorRisingCaptureTime) % 60000) / 58;
 	}
 }
@@ -97,8 +160,11 @@ void ADC_Update() {
 	}
 	if (ADC_New_Data_Available_P) {
 		p_meter = ADC_GetLastValue_P();
+
 		motor_speed = MOTOR_DRIVE_SPEED * p_meter / P_METER_MAX_VALUE;
-		Motor_Set_Speed(motor_speed, motor_speed);
+		if (isTest) { // set speed directly if in test mode
+			Motor_Set_Speed(motor_speed, motor_speed);
+		}
 	}
 
 	// react to lighting condition
@@ -169,51 +235,32 @@ void Serial_Update() {
 // --- LIFE CYCLE --
 
 void init() {
-	// initialize UART
-	Serial_Init();
-
-	// initialize HM10
-	HM10_Init();
-
-	// initialize ADC
-	ADC_Init();
-
-	// initialize Ultrasonic Sensor (& timers utiized)
-	Ultrasonic_Init();
-
-	// initialize Motor
-	Motor_Init();
-
-	// initialize LEDs
-	Led_Init();
-
-	// initialize Rotation Counter
-	External_Init();
+	Serial_Init(); // initialize UART
+	HM10_Init(); // initialize HM10
+	ADC_Init(); // initialize ADC (& timer utilized)
+	Ultrasonic_Init(); 	// initialize Ultrasonic Sensor (& timers utiized)
+	Motor_Init(); // initialize Motor
+	Led_Init();  // initialize LEDs
+	External_Init(); // initialize Rotation Counter
 }
 
 void update() {
-	// update Ultrasonic read values
-	Ultrasonic_Update();
+	ADC_Update(); // update ADC read values
+	Ultrasonic_Update(); // update Ultrasonic read values
+	Serial_Update(); // check and response to given commands
 
-	// update ADC read values
-	ADC_Update();
-
-	// check and response to given commands
-	Serial_Update();
+	if (!isTest && !isStop) {
+		autodrive();
+	}
 }
 
 int main() {
-	// initialize components
-	init();
+	init(); // initialize components
 
-	// start Ultrasonic
-	Ultrasonic_Start();
+	ADC_Start();  // start ADC
+	Ultrasonic_Start(); // start Ultrasonic
 
-	// start ADC
-	ADC_Start();
-
-	// stop Motor
-	Motor_Stop();
+	Motor_Stop(); // stop Motor
 
 	while(1) {
 		update();
